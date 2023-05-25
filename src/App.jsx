@@ -1,20 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route  } from "react-router-dom"
 
-/*import styled from "styled-components"
-import HomePage from "./pages/HomePage"
-import SignInPage from "./pages/SignInPage"
-import SignUpPage from "./pages/SignUpPage"
-import TransactionsPage from "./pages/TransactionPage"
-import { UserContext } from './Context/user.context'
-import { useState } from "react"
-import ValidateAuth from "./components/Auth.component" */
+import styled from "styled-components"
+import HomePage from "./Pages/HomePage.jsx"
+// import TicketsPage from "./Pages/TicketPage.js"
+// import HotelsPage from './Pages/HotelPage.js'
 
 
 export default function App() {
 
+
   return (
-      <h1>olá mundo!</h1>
-  
-  
-    )
+
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/" Component={HomePage} />
+          </Routes>
+        </BrowserRouter>
+
+   
+  )
 }
+
+const PagesContainer = styled.main`
+  background-color: #11172B;
+  width: calc(100vw - 50px);
+  min-height: 100dvh;
+  padding: 25px;
+`
