@@ -1,9 +1,11 @@
 import styled from 'styled-components'
+import { Navigate } from 'react-router-dom'
 
 export  default function  Navbar() {
+   
     return (
         <NavBar>
-            <h1>  Viagens Alucinantes </h1>
+            <h1 >  Viagens Alucinantes </h1>
         </NavBar>
     )
 }

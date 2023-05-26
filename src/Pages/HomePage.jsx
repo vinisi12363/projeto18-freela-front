@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import NavBar from '../Components/Navbar.jsx'
-import HomeBody from '../Components/HomePage.body.jsx'
+import HomeBody from '../Components/Home/HomePage.body.jsx'
 
 export  default function HomePage(){
 

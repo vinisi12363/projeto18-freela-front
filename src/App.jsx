@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route  } from "react-router-dom"
 
 import styled from "styled-components"
 import HomePage from "./Pages/HomePage.jsx"
-// import TicketsPage from "./Pages/TicketPage.js"
-// import HotelsPage from './Pages/HotelPage.js'
+ import TicketPage from "./Pages/TicketPage.jsx"
+// import HotelsPage from './Pages/HotelPage.jsx'
 
 
 export default function App() {
@@ -14,6 +14,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path="/" Component={HomePage} />
+            <Route path="/tickets" Component={TicketPage}/>
           </Routes>
         </BrowserRouter>
 
