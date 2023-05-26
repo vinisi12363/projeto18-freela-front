@@ -47,7 +47,7 @@ export default function HomeBody() {
        </PresentationDiv>
 
       
-        <h2>Para onde você quer ir?</h2>
+        <h1>Para onde você quer ir?</h1>
         <FormContainer>
         <form  onSubmit={handleSubmit}>
           <CustomSelect
@@ -120,6 +120,9 @@ const CustomSelect = styled.select `
     text-align:center;
     font-size:18;
     font-weight:400;
+    option{
+      font-weight:700;
+    }
 `
 
 const HomeBodyContainer= styled.div `
@@ -138,7 +141,7 @@ const HomeBodyContainer= styled.div `
     background-color: #8dbdeb;
     align-items:center; 
     flex-direction:column;
-    background-image : linear-gradient(to bottom, rgba(0,0,255,0.5),  rgba(245, 183, 39, 0.8)  ),
+    background-image : linear-gradient(to bottom, rgba(208, 252, 255, 0.8),  rgba(245, 183, 39, 0.8)  ),
     url('https://assets3.thrillist.com/v1/image/3109501/1200x630/flatten;crop_down;webp=auto;jpeg_quality=70');
     background-size: cover;
     overflow:hidden;

@@ -5,10 +5,11 @@ import { useState, } from "react";
 import { Navigate } from 'react-router-dom';
 import htl1 from '../../Assets/images/HotelImages/Salvador/htl1.png'
 const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/uploads/2023/03/conheca-salvador-e-se-apaixone-pela-capital-baiana.jpeg"
+import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
 
 
 export default function TicketBody() {
-
+  const {cities} = CitiesContextHook();
   const [selectedMinimalPrice, setSelectedMinimalPrice] = useState(0);
   const [selectedMaximunPrice, setSelectedMaxmimunPrice] = useState(0);
   const handlePriceChange = (event) => {
@@ -17,11 +18,11 @@ export default function TicketBody() {
   const handleMaxchange = (event) => {
     setSelectedMaxmimunPrice(event.target.value);
   };
-
+  console.log("CITY", cities) 
   return (
     <HomeBodyContainer>
       <PresentationDiv>
-        <h4> passagens para Salvador </h4>
+        <p> passagens para {cities}</p>
       </PresentationDiv>
 
       <PanelContainer>
@@ -172,14 +173,16 @@ const FormContainer = styled.div`
 const PresentationDiv = styled.div`
       margin-top:25px;
       display: flex;
-      max-width:50%;
+      min-width:80%;
       max-height:100px;
       background-color:#ebebeb;
       border-radius: 5px  ;
       border:4px black solid ;
-      p {
-          font-size: 22px;
-          font-weight: 200;
+      align-items:center;
+      p { 
+          margin-left:35%;
+          font-size: 45px;
+          font-weight: 700;
           text-align: center;
           text-decoration: italic;
       }
