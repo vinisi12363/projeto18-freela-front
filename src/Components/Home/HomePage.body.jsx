@@ -1,22 +1,43 @@
-
-
 import styled from "styled-components";
-import { useState , } from "react";
-import { Navigate } from 'react-router-dom';
-
+import { useState , useEffect} from "react";
+import { useNavigate } from 'react-router-dom';
+import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
+import axios from 'axios'
 
 
 export default function HomeBody() {
-  const [selectedCity, setSelectedCity] = useState("");
+    const navigate = useNavigate()
+    const {setCities} = CitiesContextHook()
+    const [citiesList, setCitiesList] = useState([]);
+  
+
+  useEffect(()=>{
+    const URL = `${import.meta.env.VITE_APP_API_URL}/home`
+
+    try {
+      const require = axios.get(URL)
+      require.then(res => {
+        setCitiesList([...res.data])
+      })
+      require.catch(err => {
+        console.log(err.message)
+        
+      })
+
+
+    }catch(err){alert(err.messsage)}
+  
+  }, [])
  
 
   const handleCitySelection = (event) => {
-    setSelectedCity(event.target.value);
+   
+    setCities(event.target.value)
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    Navigate ('/tickets')
+    navigate('/tickets')
   };
 
     return (
@@ -32,16 +53,18 @@ export default function HomeBody() {
           <CustomSelect
             name="Destinos"
             id="destiny"
-            value={selectedCity}
             onChange={handleCitySelection}
           >
-            <option >
-              <p>Escolha o destino... </p>
-            </option>
-            <option value="Salvador">Salvador - BA</option>
-            <option value="Brasília">Brasília - DF</option>
-            <option value="Rio de Janeiro">Rio de Janeiro - RJ</option>
-            <option value="São Paulo">São Paulo - SP</option>
+           
+            {citiesList.map((data)=>{
+            return(      
+              <option  
+                id={data.city_id} 
+                value={data.city_name}>
+                {data.city_name} - {data.city_uf}
+              </option>
+              );
+            })}
           </CustomSelect>
 
           <button type="submit">Go!</button>
