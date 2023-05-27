@@ -177,7 +177,6 @@ export default function TicketBody() {
           })
         }
        
-
         </CardsContainer>
       
       </PanelContainer>
