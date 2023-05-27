@@ -25,7 +25,7 @@ export default function HomeBody() {
       })
 
 
-    }catch(err){alert(err.messsage)}
+    }catch(err){alert("erro", err)}
   
   }, [])
  
