@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import { useState, } from "react";
 import {Slider} from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 import htl1 from '../../Assets/images/HotelImages/Salvador/htl1.png'
 import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
 import TicketsContextHook from '../../Hooks/TicketsContext.Hook.jsx'
@@ -14,21 +15,39 @@ const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/upl
 
 
 export default function TicketBody() {
-  const [value, setValue] = useState([1, 3000]);
+  const [value, setValue] = useState([1,3000]);
   const [airlines, setAirlines] = useState ([]);
+  const [citiesList, setCitiesList] = useState([])
   const [especificAirline, setEspecificAirline] = useState("")
+  const [especificCity, setEspecificCity] = useState("")
   const {tickets, setTickets} = TicketsContextHook()
   const {cities} = CitiesContextHook()
   const [selectedMinimalPrice, setSelectedMinimalPrice] = useState(0);
   const [selectedMaximunPrice, setSelectedMaxmimunPrice] = useState(0);
-  
+  let newQuery = {
+    airline_name:"",
+    destination_city_name:"",
+    prices:[]
+  }
+
+
   useEffect (()=>{
 
     const fecthData = async ()=>{
+      const URL = `${import.meta.env.VITE_APP_API_URL}/home`
       const URL1 = `${import.meta.env.VITE_APP_API_URL}/airlines`
       const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
       try {
-        const require = await axios.get(URL1)
+        const promise = axios.get(URL)
+        promise.then(res => {
+          setCitiesList([...res.data])
+        })
+        promise.catch(err => {
+          console.log(err.message)
+          
+        })
+
+        const require = axios.get(URL1)
         require.then(res => {
           setAirlines([...res.data])
         })
@@ -37,7 +56,7 @@ export default function TicketBody() {
           
         })
 
-        const require2 = await axios.get(URL2)
+        const require2 = axios.get(URL2)
         require2.then(res => {
           setTickets([...res.data])
         })
@@ -52,15 +71,29 @@ export default function TicketBody() {
     fecthData()
     
   }, [])
+
+
   const handleAirlineSelection = (event) => {
-   
     setEspecificAirline(event.target.value)
   };
 
+  const handleCitySelection = (event) => {
+    setEspecificCity(event.target.value)
+  };
 
-      const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
+
+  const handleChange = (event, newValue) => {
+  setValue(newValue);
+  };
+  const setQueryData = ()=>{
+    newQuery = {
+      airline_name: especificAirline,
+      destination_city_name: especificCity,
+      prices: value
+    }
+    console.log('newQeury', newQuery)
+
+  }
   
   return (
     <HomeBodyContainer>
@@ -71,7 +104,7 @@ export default function TicketBody() {
       <PanelContainer>
        
         <PriceContainer>
-        <form  >
+       
           <CustomSelect
             key="airlines"
             name="airlines"
@@ -88,29 +121,59 @@ export default function TicketBody() {
               </option>
               );
             })}
-          </CustomSelect>
 
+            
+          </CustomSelect>
+          <CustomSelect
+           key="destiny"
+            name="Destinos"
+            id="destiny"
+            onChange={handleCitySelection}
+          >
+          
+            {citiesList.map((data)=>{
+            return(      
+              <option  
+                id={data.city_id} 
+                value={data.city_name}>
+                {data.city_name} - {data.city_uf}
+              </option>
+              );
+            })}
+          </CustomSelect>
         
-        </form>
+      
           <Slider
             value={value}
             onChange={handleChange}
-            valueLabelDisplay="auto"
+            valueLabelDisplay="100"
             min={1}
             max={3000}
+            sx={{
+                
+                width: 180,
+                color: '#311b92',
+                '& .MuiSlider-thumb': {
+                  borderRadius: '50%',
+                },
+              }}
           />
-          <button type="submit" >filter</button>
+          
+          <button  onClick={setQueryData}>filter</button>
 
         </PriceContainer>
         
         <CardsContainer>
         {
           tickets.map((data)=>{
-            <divCard key={data.flight_id}>
+            return(
+              <DivCard key={data.flight_id}>
               <h3>{data.airline_name}</h3>
               <p>{data.destination_city_name}</p>
               <p>{data.price}</p>
-            </divCard>
+            </DivCard>
+            );
+           
           })
         }
        
@@ -119,81 +182,87 @@ export default function TicketBody() {
       
       </PanelContainer>
 
-
-
     </HomeBodyContainer>
   );
 }
+const theme = createTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+});
 
-const AirlineSelector = styled.select `
-
-
-
-
-
-`
 const CardsContainer = styled.div`
-    
-      
+     overflow-y:hidden;
+     margin-left:10px;
      display:flex; 
      flex-wrap:wrap;
-  
-  
+     width:100%;
+     height:800px;
+     background-color: linear-gradient(to bottom, transparent, rgba(176, 190, 197));
   `
 
-const divCard = styled.div`
+const DivCard = styled.div`
     margin-left: 20px;
     margin-top:10px;
     margin-right:5px;
+    border-radius:10px;
+    border:3px #030221 solid;
+    background-color:#1a237e;
+    min-height:100px; 
+    h3{
+      color:white;  
+    } 
     p{
-      position:relative;
-      left:260px;
-      bottom:60px;
+    
       font-weight:700;
-      font-size:22px;
-      color:black; 
-      transition: transform 0.3s ease;
+      font-size:14px;
+      color:white;   
 
-      transition: scale(1.1); 
     }
-    img{
-        width:350px;
-        border:3px solid;
-        border-radius:6px;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-    img:hover{
-
-      transform: scale(1.1);
-    }
-
+    
   `
 const PanelContainer = styled.div`
     display: flex;
     flex-direction: rows;
     margin-top:20px;
-    width:75%;
-    justify-content: space-between;
-    background-color: linear-gradient(to bottom, gray, transparent);
+    max-width:75%;
+   
     border-radius:5px;
-   // border: 2px solid gray;
+   
 
 `
 
 const PriceContainer = styled.div`
-  display:flex;
- flex-direction: column;
- background-color: lightgray;
- height:490px;
- width:30%;
- border-radius:5px;
- border:1px solid;
- margin-top:10px; 
- button{
-  margin-left: 35px;
-  border:1px solid;  
- }
+    display:flex;
+    flex-direction: column;
+    background-color: #5c6bc0;
+     align-items: center;
+    height:490px;
+    min-width:250px;
+    border-radius:5px;
+    border:3px solid;
+    margin-top:10px; 
+    button{
+      margin-top:45px;
+      font-size:22px;
+      font-weight:bold;
+      background: #3949ab;
+      border: 2px solid;
+      border-radius:5px;
+      height:40px;
+      width:100px; 
+    }
 
 `
 
@@ -225,15 +294,11 @@ const PresentationDiv = styled.div`
           text-decoration: italic;
       }
   `
-const ButtonSelect = styled.button`
-  
-  color: #0abfbc;
-  border: 20px solid;
-  border-radius:50%;
-  height:40px;
-  width:40px;
-`
+
 const CustomSelect = styled.select`
+    margin-top:10px;
+    margin-left:10px;
+    margin-bottom:35px;
     min-width:70%;
     min-height:50px;
     background:#d9d9d9;
@@ -243,17 +308,7 @@ const CustomSelect = styled.select`
 `
 
 const HomeBodyContainer = styled.div`
-    button{
-      position:relative;
-      left:20%;
-      margin-top:20px;
-      background: #0abfbc;
-      border:0.5px #b8d9c8 solid;
-      border-radius:50%;
-      height:60px;
-      width:60px; 
-      font-weight:700;
-    }
+   
     display: flex;
     background-color: #8dbdeb;
     align-items:center; 
