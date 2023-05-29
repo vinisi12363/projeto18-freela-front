@@ -72,8 +72,7 @@ export default function TicketBody() {
     
   }, [])
 
-    console.log ("TCIKETS", tickets)
-    async function searchData(newQuery){
+        async function searchData(newQuery){
       const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
       const require2 = axios.post(URL2,newQuery)
       require2.then(res => {
@@ -125,7 +124,7 @@ export default function TicketBody() {
           
         })
         
-     // navigate('/hotels')    
+     navigate('/hotels')    
     }catch(err){
 
       console.log(err)
@@ -209,7 +208,7 @@ export default function TicketBody() {
         {
           tickets.map((data)=>{
             return(
-              <DivCard onClick={()=>{postCity(data.city_id)}} key={data.flight_id}>
+              <DivCard onClick={()=>{postCity(data.destination_city_id)}} key={data.flight_id}>
               <h3>{data.airline_name}</h3>
               <p>{data.departure_time.slice(0, 10)}</p>
               <p>{data.destination_city_name}</p>
