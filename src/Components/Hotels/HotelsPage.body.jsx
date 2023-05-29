@@ -25,8 +25,7 @@ export default function TicketBody() {
   useEffect (()=>{
 
     const fecthData = async ()=>{
-      const URL1 = `${import.meta.env.VITE_APP_API_URL}/airlines`
-      const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
+      const URL1 = `${import.meta.env.VITE_APP_API_URL}/hotels`
       try {
         const require = await axios.get(URL1)
         require.then(res => {
@@ -101,7 +100,7 @@ export default function TicketBody() {
           />
           <button type="submit" >filter</button>
 
-        </PriceContainer>
+        </PriceContainer> 
     
         <PhotosContainer>
           <ImgDiv>

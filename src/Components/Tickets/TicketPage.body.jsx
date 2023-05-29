@@ -111,7 +111,7 @@ export default function TicketBody() {
     searchData(newQuery);
 
   }
-  
+ 
   return (
     <HomeBodyContainer>
       <PresentationDiv>
@@ -121,7 +121,7 @@ export default function TicketBody() {
       <PanelContainer>
        
         <PriceContainer>
-       
+          <p>1- Escolha uma linha aérea:</p>
           <CustomSelect
             key="airlines"
             name="airlines"
@@ -141,6 +141,7 @@ export default function TicketBody() {
 
             
           </CustomSelect>
+          <p>2- se quiser alterar o ponto de partida fique a vontade: </p>
           <CustomSelect
            key="destiny"
             name="Destinos"
@@ -159,7 +160,7 @@ export default function TicketBody() {
             })}
           </CustomSelect>
         
-      
+          <p>3- por fim, adicione a faixa de valores desejada:</p>
           <Slider
             value={value}
             onChange={handleChange}
@@ -181,12 +182,13 @@ export default function TicketBody() {
 
         </PriceContainer>
         
-        <CardsContainer>
+        <CardsContainer onClick={()=>{alert("olá!")}}>
         {
           tickets.map((data)=>{
             return(
               <DivCard key={data.flight_id}>
               <h3>{data.airline_name}</h3>
+              <p>{data.departure_time.slice(0, 10)}</p>
               <p>{data.destination_city_name}</p>
               <p>{data.price}</p>
             </DivCard>
@@ -202,32 +204,21 @@ export default function TicketBody() {
     </HomeBodyContainer>
   );
 }
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: '#757ce8',
-      main: '#3f50b5',
-      dark: '#002884',
-      contrastText: '#fff',
-    },
-    secondary: {
-      light: '#ff7961',
-      main: '#f44336',
-      dark: '#ba000d',
-      contrastText: '#000',
-    },
-  },
-});
+
 
 const CardsContainer = styled.div`
-     overflow-y:hidden;
-     margin-left:10px;
-     display:flex; 
-     flex-wrap:wrap;
-     width:100%;
-     height:800px;
-     background-color: linear-gradient(to bottom, transparent, rgba(176, 190, 197));
-  `
+  overflow-y: hidden;
+  margin-left: 10px;
+  display: flex; 
+  flex-wrap: wrap;
+  width: 100%;
+  height: 800px;
+  background: linear-gradient(to bottom, transparent, rgba(176, 190, 197));
+  :hover {
+    cursor: pointer;
+  }
+`
+
 
 const DivCard = styled.div`
     margin-left: 20px;
@@ -279,6 +270,11 @@ const PriceContainer = styled.div`
       border-radius:5px;
       height:40px;
       width:100px; 
+    }
+    p{
+      color:white;
+      font-weight:bold;
+      font-size:16px;
     }
 
 `
