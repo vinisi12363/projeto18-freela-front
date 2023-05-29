@@ -6,10 +6,10 @@ import {Slider} from '@mui/material';
 import HotelsContextHook from '../../Hooks/HotelsContext.Hook.jsx'
 import CitiesContextHook from "../../Hooks/CitiesContext.Hook.jsx";
 import TicketsContextHook from '../../Hooks/TicketsContext.Hook.jsx'
+import CitySelectedContextHook from '../../Hooks/CitySelectedContext.Hook.jsx'
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/uploads/2023/03/conheca-salvador-e-se-apaixone-pela-capital-baiana.jpeg"
 
 
@@ -21,6 +21,7 @@ export default function TicketBody() {
   const [especificCity, setEspecificCity] = useState("")
   const {tickets, setTickets} = TicketsContextHook()
   const {hotels, setHotels} = HotelsContextHook()
+  const {setSelectedCityId} = CitySelectedContextHook();
   const {cities} = CitiesContextHook()
   const navigate = useNavigate()
 
@@ -110,28 +111,10 @@ export default function TicketBody() {
     searchData(newQuery);
 
   }
-  const postCity = async(city_id)=>{
-    try{
-
-      const URL = `${import.meta.env.VITE_APP_API_URL}/hotels`
-        const require = axios.post(URL, {city_id})
-        require.then(res => {
-          setHotels([...res.data])
-          console.log(res.data)
-         }) 
-        require.catch(err => {
-          console.log(err.message)
-          
-        })
-        
-     navigate('/hotels')    
-    }catch(err){
-
-      console.log(err)
-    }
-
-
-
+  const postCity = (city_id)=>{
+    console.log(city_id)
+    setSelectedCityId(city_id)
+    navigate('/hotels')
   }
   
   return (
