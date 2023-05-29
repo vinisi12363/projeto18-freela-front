@@ -6,6 +6,7 @@ import {Slider} from '@mui/material';
 import htl1 from '../../Assets/images/HotelImages/Salvador/htl1.png'
 import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
 import TicketsContextHook from '../../Hooks/TicketsContext.Hook.jsx'
+import HotelsContextHook from "../../Hooks/HotelsContext.Hook";
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -14,18 +15,18 @@ const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/upl
 
 
 export default function TicketBody() {
-  const [value, setValue] = useState([1, 3000]);
+  const [value, setValue] = useState([1, 3000]);// usado  como max no slider 
   const [airlines, setAirlines] = useState ([]);
   const [especificAirline, setEspecificAirline] = useState("")
   const {tickets, setTickets} = TicketsContextHook()
+  const {hotels} = HotelsContextHook()
   const {cities} = CitiesContextHook()
-  const [selectedMinimalPrice, setSelectedMinimalPrice] = useState(0);
-  const [selectedMaximunPrice, setSelectedMaxmimunPrice] = useState(0);
   
   useEffect (()=>{
 
     const fecthData = async ()=>{
-      const URL1 = `${import.meta.env.VITE_APP_API_URL}/hotels`
+     
+      const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
       try {
         const require = await axios.get(URL1)
         require.then(res => {
@@ -100,7 +101,7 @@ export default function TicketBody() {
           />
           <button type="submit" >filter</button>
 
-        </PriceContainer> 
+        </PriceContainer>
     
         <PhotosContainer>
           <ImgDiv>

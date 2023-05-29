@@ -3,13 +3,12 @@
 import styled from "styled-components";
 import { useState, } from "react";
 import {Slider} from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import htl1 from '../../Assets/images/HotelImages/Salvador/htl1.png'
-import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
+import HotelsContextHook from '../../Hooks/HotelsContext.Hook.jsx'
+import CitiesContextHook from "../../Hooks/CitiesContext.Hook.jsx";
 import TicketsContextHook from '../../Hooks/TicketsContext.Hook.jsx'
 import { useEffect } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/uploads/2023/03/conheca-salvador-e-se-apaixone-pela-capital-baiana.jpeg"
 
@@ -21,9 +20,10 @@ export default function TicketBody() {
   const [especificAirline, setEspecificAirline] = useState("")
   const [especificCity, setEspecificCity] = useState("")
   const {tickets, setTickets} = TicketsContextHook()
+  const {hotels, setHotels} = HotelsContextHook()
   const {cities} = CitiesContextHook()
-  const [selectedMinimalPrice, setSelectedMinimalPrice] = useState(0);
-  const [selectedMaximunPrice, setSelectedMaxmimunPrice] = useState(0);
+  const navigate = useNavigate()
+
   let newQuery = {
     airline_name:"",
     destination_city_name:"",
@@ -72,7 +72,7 @@ export default function TicketBody() {
     
   }, [])
 
-
+    console.log ("TCIKETS", tickets)
     async function searchData(newQuery){
       const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
       const require2 = axios.post(URL2,newQuery)
@@ -111,7 +111,30 @@ export default function TicketBody() {
     searchData(newQuery);
 
   }
- 
+  const postCity = async(city_id)=>{
+    try{
+
+      const URL = `${import.meta.env.VITE_APP_API_URL}/hotels`
+        const require = axios.post(URL, {city_id})
+        require.then(res => {
+          setHotels([...res.data])
+          console.log(res.data)
+         }) 
+        require.catch(err => {
+          console.log(err.message)
+          
+        })
+        
+     // navigate('/hotels')    
+    }catch(err){
+
+      console.log(err)
+    }
+
+
+
+  }
+  
   return (
     <HomeBodyContainer>
       <PresentationDiv>
@@ -182,11 +205,11 @@ export default function TicketBody() {
 
         </PriceContainer>
         
-        <CardsContainer onClick={()=>{alert("olá!")}}>
+        <CardsContainer >
         {
           tickets.map((data)=>{
             return(
-              <DivCard key={data.flight_id}>
+              <DivCard onClick={()=>{postCity(data.city_id)}} key={data.flight_id}>
               <h3>{data.airline_name}</h3>
               <p>{data.departure_time.slice(0, 10)}</p>
               <p>{data.destination_city_name}</p>
