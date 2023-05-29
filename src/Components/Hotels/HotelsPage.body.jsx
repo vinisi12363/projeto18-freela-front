@@ -7,6 +7,7 @@ import htl1 from '../../Assets/images/HotelImages/Salvador/htl1.png'
 import CitiesContextHook from '../../Hooks/CitiesContext.Hook.jsx'
 import TicketsContextHook from '../../Hooks/TicketsContext.Hook.jsx'
 import HotelsContextHook from "../../Hooks/HotelsContext.Hook";
+import CitySelectedContextHook from '../../Hooks/CitySelectedContext.Hook.jsx'
 import { useEffect } from "react";
 import axios from "axios";
 
@@ -16,42 +17,29 @@ const SalvadorUrlBackGround = "https://revistaazul.voeazul.com.br/wp-content/upl
 
 export default function TicketBody() {
   const [value, setValue] = useState([1, 3000]);// usado  como max no slider 
-  const [airlines, setAirlines] = useState ([]);
   const [especificAirline, setEspecificAirline] = useState("")
-  const {tickets, setTickets} = TicketsContextHook()
-  const {hotels} = HotelsContextHook()
-  const {cities} = CitiesContextHook()
-  
-  useEffect (()=>{
-
-    const fecthData = async ()=>{
-     
-      const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
-      try {
-        const require = await axios.get(URL1)
+  const {hotels, setHotels} = HotelsContextHook()
+  const {selectedCityId} = CitySelectedContextHook()
+  console.log("SELECTED CITY ID",selectedCityId )
+  useEffect (()=>{    
+    try{
+      const URL = `${import.meta.env.VITE_APP_API_URL}/hotels`
+        const require = axios.post(URL, {city_id:selectedCityId})
         require.then(res => {
-          setAirlines([...res.data])
-        })
+          setHotels([...res.data])
+          console.log(res.data)
+         }) 
         require.catch(err => {
           console.log(err.message)
           
         })
+            
+    }catch(err){
 
-        const require2 = await axios.get(URL2)
-        require2.then(res => {
-          setTickets([...res.data])
-        })
-        require.catch(err => {
-          console.log(err.message)
-          
-        })
-  
-      }catch(err){console.log("error in effect tickets", err)}
-    
+      console.log(err)
     }
-    fecthData()
-    
-  }, [])
+
+  }, []) 
   const handleAirlineSelection = (event) => {
    
     setEspecificAirline(event.target.value)
@@ -65,71 +53,37 @@ export default function TicketBody() {
   return (
     <HomeBodyContainer>
       <PresentationDiv>
-        <p> passagens para {cities}</p>
-      </PresentationDiv>
+            </PresentationDiv>
 
       <PanelContainer>
        
-        <PriceContainer>
-        <form  >
-          <CustomSelect
-            key="airlines"
-            name="airlines"
-            id="airlines"
-            onChange={handleAirlineSelection}
-          >
-           
-            {airlines.map((data)=>{
-            return(      
-              <option  
-                id={data.airline_id} 
-                value={data.airline_name}>
-                {data.airline_name}
-              </option>
-              );
-            })}
-          </CustomSelect>
-
-        
-        </form>
-          <Slider
-            value={value}
-            onChange={handleChange}
-            valueLabelDisplay="auto"
-            min={1}
-            max={3000}
-          />
-          <button type="submit" >filter</button>
-
-        </PriceContainer>
     
-        <PhotosContainer>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p>
-          </ImgDiv>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p>
-          </ImgDiv>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p>
-          </ImgDiv>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p>
-          </ImgDiv>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p>
-          </ImgDiv>
-          <ImgDiv>
-            <img src={htl1}></img>
-            <p>R$299,00</p> 
-          </ImgDiv>
+       
+        <CardsContainer >
+        {
+          hotels.map((data)=>{
+            return(
 
-        </PhotosContainer>
+              <>
+                <ImgDiv>
+                <img src={htl1}></img>
+              </ImgDiv>
+                <DivCard key={data.flight_id}>
+                <h3>{data.hotel_name}</h3>
+                <p>{data.description}</p>
+                <p>{data.amenities}</p>
+                <p>{data.price_per_night}</p>
+              </DivCard>
+              </>
+            
+            );
+           
+          })
+        }
+       
+        </CardsContainer>
+        
+
       </PanelContainer>
 
 
@@ -138,13 +92,43 @@ export default function TicketBody() {
   );
 }
 
-const AirlineSelector = styled.select `
-
-
-
-
-
+const CardsContainer = styled.div`
+  overflow-y: hidden;
+  margin-left: 10px;
+  display: flex; 
+  flex-wrap: wrap;
+  width: 100%;
+  height: 800px;
+  background: linear-gradient(to bottom, transparent, rgba(176, 190, 197));
+  :hover {
+    cursor: pointer;
+  }
 `
+
+
+
+
+
+const DivCard = styled.div`
+    margin-left: 20px;
+    margin-top:10px;
+    margin-right:5px;
+    border-radius:10px;
+    border:3px #030221 solid;
+    background-color:#1a237e;
+    min-height:100px; 
+    h3{
+      color:white;  
+    } 
+    p{
+    
+      font-weight:700;
+      font-size:14px;
+      color:white;   
+
+    }
+    
+  `
 const PhotosContainer = styled.div`
     
       
