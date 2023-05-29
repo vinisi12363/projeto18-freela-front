@@ -73,6 +73,20 @@ export default function TicketBody() {
   }, [])
 
 
+    async function searchData(newQuery){
+      const URL2 = `${import.meta.env.VITE_APP_API_URL}/tickets`
+      const require2 = axios.post(URL2,newQuery)
+      require2.then(res => {
+        setTickets([...res.data])
+      })
+      require2.catch(err => {
+        console.log(err.message)
+        
+      })
+    }
+
+ 
+
   const handleAirlineSelection = (event) => {
     setEspecificAirline(event.target.value)
   };
@@ -86,12 +100,15 @@ export default function TicketBody() {
   setValue(newValue);
   };
   const setQueryData = ()=>{
+
+    const airline_id = Number(especificAirline);
+   const destination_city_id = Number(especificCity);
     newQuery = {
-      airline_name: especificAirline,
-      destination_city_name: especificCity,
+      airline_id: airline_id,
+      destination_city_id: destination_city_id,
       prices: value
     }
-    console.log('newQeury', newQuery)
+    searchData(newQuery);
 
   }
   
@@ -116,7 +133,7 @@ export default function TicketBody() {
             return(      
               <option  
                 id={data.airline_id} 
-                value={data.airline_name}>
+                value={data.airline_id}>
                 {data.airline_name}
               </option>
               );
@@ -135,7 +152,7 @@ export default function TicketBody() {
             return(      
               <option  
                 id={data.city_id} 
-                value={data.city_name}>
+                value={data.city_id}>
                 {data.city_name} - {data.city_uf}
               </option>
               );
@@ -157,6 +174,7 @@ export default function TicketBody() {
                   borderRadius: '50%',
                 },
               }}
+
           />
           
           <button  onClick={setQueryData}>filter</button>
